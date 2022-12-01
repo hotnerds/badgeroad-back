@@ -1,5 +1,6 @@
 package com.hotnerds.badgeroad.controller;
 
+import com.hotnerds.badgeroad.dto.JwtRequestDto;
 import com.hotnerds.badgeroad.dto.MemberSignupRequestDto;
 import com.hotnerds.badgeroad.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -19,5 +20,14 @@ public class AuthController {
     @PostMapping(value = "signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public String signup(@RequestBody MemberSignupRequestDto request) {
         return authService.signup(request);
+    }
+
+    @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String login(@RequestBody JwtRequestDto request) {
+        try {
+            return authService.login(request);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 }

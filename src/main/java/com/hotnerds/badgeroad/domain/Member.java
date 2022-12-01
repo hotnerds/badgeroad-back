@@ -1,6 +1,7 @@
 package com.hotnerds.badgeroad.domain;
 
 import com.hotnerds.badgeroad.dto.MemberSignupRequestDto;
+import com.hotnerds.badgeroad.model.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
