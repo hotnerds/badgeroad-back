@@ -1,11 +1,9 @@
 package com.hotnerds.badgeroad.repository;
 
-import com.hotnerds.badgeroad.domain.Member;
+import com.hotnerds.badgeroad.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
 
-    Optional<Member> findByEmail(String email);
+    Member findByEmail(String email);
 }

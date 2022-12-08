@@ -1,8 +1,5 @@
 package com.hotnerds.badgeroad.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hotnerds.badgeroad.domain.UserDetails;
-import com.hotnerds.badgeroad.service.UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,10 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -50,31 +46,23 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests(
-                        (requests) -> requests
-                                .antMatchers("/", "/home").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .formLogin(
-                        (form) -> form
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/signup/**").permitAll()
+                .antMatchers("/index").permitAll()
+                .antMatchers("/members").hasRole("ADMIN")
+                .and().
+                formLogin(
+                        form -> form
                                 .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/members")
                                 .permitAll()
-                )
-                .logout(LogoutConfigurer::permitAll);
-//                .and()
-//                .antMatchers("/admin/**").hasRole("ADMIN")
-//                .anyRequest().permitAll();
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .usernameParameter("email")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
-
+                ).logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .permitAll()
+                );
         return http.build();
     }
 
