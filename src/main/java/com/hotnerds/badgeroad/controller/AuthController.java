@@ -30,6 +30,11 @@ public class AuthController {
         return "login";
     }
 
+    @PostMapping("/login")
+    public String loginConfirm() {
+        return "login";
+    }
+
     // handler method to handle Member registration request
     @GetMapping("signup")
     public String showRegistrationForm(Model model){
