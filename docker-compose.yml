@@ -1,13 +1,13 @@
 version: '3'
 services:
-  dev-db:
+  database:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - '3306:3306'
+      - 13306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: badgeload
-      MYSQL_DATABASE: badgeload
-      MYSQL_USER: badgeload
-      MYSQL_PASSWORD: badgeload
+      MYSQL_ROOT_PASSWORD: jeong1998#
+      MYSQL_DATABASE: badgeroad
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
