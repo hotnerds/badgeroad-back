@@ -12,10 +12,12 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/badgeroad?useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: jeong1998#
-
+    password: jeong1998
   profiles:
     include: API-KEY
+  sql:
+    init:
+      mode: always
 
   jpa:
     database: mysql

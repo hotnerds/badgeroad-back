@@ -1,30 +1,21 @@
 package com.hotnerds.badgeroad;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 import static org.junit.Assert.fail;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class JDBCTests {
-    @Before
-    public void Setup() {
-
-    }
 
     @Value("${spring.datasource.url}")
     String url_;
 
-    @Value("${spring.datasource.user}")
+    @Value("${spring.datasource.username}")
     String user_;
 
     @Value("${spring.datasource.password}")
