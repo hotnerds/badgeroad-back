@@ -26,7 +26,7 @@ public class UserDto {
 
    @NotNull
    @Size(min = 3, max = 50)
-   private String nickname;
+   private String name;
 
    public static UserDto from(User user) {
       if(user == null) return null;
@@ -34,7 +34,7 @@ public class UserDto {
       return UserDto.builder()
               .email(user.getEmail())
               .password(user.getPassword())
-              .nickname(user.getNickname())
+              .name(user.getName())
               .build();
    }
 }

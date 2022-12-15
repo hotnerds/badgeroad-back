@@ -61,19 +61,8 @@ public class UserController {
 
     // handler method to handle register Member form submit request
     @PostMapping("/signup")
-    public String registration(@Valid @ModelAttribute("user") UserDto user,
-                               BindingResult result,
-                               Model model){
-        UserDto existing = userService.findByEmail(user.getEmail());
-        if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
-        }
-        if (result.hasErrors()) {
-            model.addAttribute("user", user);
-            return "signup";
-        }
-        userService.saveUser(userService.userDtoToUser(user));
-        return "redirect:/login";
+    public ResponseEntity<UserDto> signup(@Valid @RequestBody UserDto userDto){
+        return ResponseEntity.ok(userService.signup(userDto));
     }
 
     @GetMapping("/users")

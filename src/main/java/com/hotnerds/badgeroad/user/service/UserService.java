@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -16,22 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
-    @Transactional
-    public UserDto signup(UserDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
-        }
-
-        User user = User.builder()
-                .email(userDto.getEmail())
-                .password(userDto.getPassword())
-                .nickname(userDto.getNickname())
-                .build();
-
-        return UserDto.from(userRepository.save(user));
-    }
-
     @Transactional
     public UserDto findByEmail(String email) {
         return UserDto.from(userRepository.findByEmail(email).orElse(null));
@@ -41,7 +26,7 @@ public class UserService {
         return User.builder()
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
-                .nickname(userDto.getNickname())
+                .name(userDto.getName())
                 .build();
     }
 
@@ -57,5 +42,20 @@ public class UserService {
 
         UserDto userDto = findByEmail(loginDto.getEmail());
         return loginDto.getPassword().equals(userDto.getPassword());
+    }
+
+    @Transactional
+    public UserDto signup(UserDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()).orElse(null) != null) {
+            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
+
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .build();
+
+        return UserDto.from(userRepository.save(user));
     }
 }
