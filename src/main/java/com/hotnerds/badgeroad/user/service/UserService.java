@@ -2,23 +2,26 @@ package com.hotnerds.badgeroad.user.service;
 
 import com.hotnerds.badgeroad.user.dto.LoginDto;
 import com.hotnerds.badgeroad.user.dto.UserDto;
+import com.hotnerds.badgeroad.user.entity.Badge;
 import com.hotnerds.badgeroad.user.entity.User;
 import com.hotnerds.badgeroad.user.exception.DuplicateUserException;
 import com.hotnerds.badgeroad.user.exception.NotFoundUserException;
 import com.hotnerds.badgeroad.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.mapper.Mapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    private final JdbcTemplate jdbcTemplate;
     @Transactional
     public UserDto findByEmail(String email) {
         return UserDto.from(userRepository.findByEmail(email).orElse(null));
@@ -62,4 +65,19 @@ public class UserService {
 
 
     }
+
+//    public List<Badge> findAllBadgesByEmail(String email) {
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("email", email);
+//        Optional<User> user = userRepository.findByEmail(email);
+//
+//        return jdbcTemplate.queryForList(
+//                "SELECT " +
+//                        "badge_name" +
+//                    "FROM " +
+//                        "user_badges" +
+//                        "WHERE " +
+//                        "email = :email", params);
+//        )
+//    }
 }

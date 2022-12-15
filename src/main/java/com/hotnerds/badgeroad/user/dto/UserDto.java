@@ -5,6 +5,7 @@ import com.hotnerds.badgeroad.user.entity.User;
 import lombok.*;
 
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class UserDto {
 
    @NotNull
    @Size(min = 3, max = 50)
+   @Email
    private String email;
 
    @NotNull
