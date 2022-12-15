@@ -1,15 +1,20 @@
 package com.hotnerds.badgeroad.user.controller;
 
+import com.hotnerds.badgeroad.user.dto.LoginDto;
+import com.hotnerds.badgeroad.user.dto.MemberDto;
 import com.hotnerds.badgeroad.user.dto.UserDto;
 import com.hotnerds.badgeroad.user.entity.User;
 import com.hotnerds.badgeroad.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -20,14 +25,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginConfirm(@Valid @RequestBody LoginDto loginDto) {
+        userService.loginConfirm(loginDto);
+
+        return "main";
     }
 
     @GetMapping("/hello")
@@ -35,28 +42,44 @@ public class UserController {
         return ResponseEntity.ok("hello");
     }
 
-    @PostMapping("/test-redirect")
-    public void testRedirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/user");
+    @GetMapping("/{email}")
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
     }
 
+    @GetMapping("/signup")
+    public String showRegistrationForm(Model model){
+        MemberDto member = new MemberDto();
+        model.addAttribute("member", member);
+        return "signup";
+    }
+
+
+
+    // handler method to handle Member registration request
+
+
+    // handler method to handle register Member form submit request
     @PostMapping("/signup")
-    public String signup(
-            @Valid @RequestBody UserDto userDto
-    ) {
+    public String registration(@Valid @ModelAttribute("user") UserDto user,
+                               BindingResult result,
+                               Model model){
+        UserDto existing = userService.findByEmail(user.getEmail());
+        if (existing != null) {
+            result.rejectValue("email", null, "There is already an account registered with that email");
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("user", user);
+            return "signup";
+        }
+        userService.saveUser(userService.userDtoToUser(user));
         return "redirect:/login";
     }
 
-    @GetMapping("/info")
-    public String getMyUserInfo(@RequestBody String email) {
-        UserDto userDto = userService.getUserByEmail(email);
-        User user = userService.userDtoToUser(userDto);
-
-        return "info";
-    }
-
-    @GetMapping("/user/{email}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+    @GetMapping("/users")
+    public String listRegisteredMembers(Model model){
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("Users", users);
+        return "users";
     }
 }
