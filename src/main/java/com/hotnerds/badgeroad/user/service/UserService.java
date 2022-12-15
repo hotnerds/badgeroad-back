@@ -3,7 +3,8 @@ package com.hotnerds.badgeroad.user.service;
 import com.hotnerds.badgeroad.user.dto.LoginDto;
 import com.hotnerds.badgeroad.user.dto.UserDto;
 import com.hotnerds.badgeroad.user.entity.User;
-import com.hotnerds.badgeroad.user.exception.DuplicateMemberException;
+import com.hotnerds.badgeroad.user.exception.DuplicateUserException;
+import com.hotnerds.badgeroad.user.exception.NotFoundUserException;
 import com.hotnerds.badgeroad.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -38,16 +40,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Boolean loginConfirm(LoginDto loginDto) {
-
-        UserDto userDto = findByEmail(loginDto.getEmail());
-        return loginDto.getPassword().equals(userDto.getPassword());
-    }
-
     @Transactional
     public UserDto signup(UserDto userDto) {
         if (userRepository.findByEmail(userDto.getEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+            throw new DuplicateUserException("이미 가입되어 있는 유저입니다.");
         }
 
         User user = User.builder()
@@ -57,5 +53,13 @@ public class UserService {
                 .build();
 
         return UserDto.from(userRepository.save(user));
+    }
+
+    public Boolean login(LoginDto loginDto) {
+        Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
+
+        return user.map(value -> value.getPassword().equals(loginDto.getPassword())).orElse(false);
+
+
     }
 }

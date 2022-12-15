@@ -32,9 +32,11 @@ public class UserController {
 
     @PostMapping("/login")
     public String loginConfirm(@Valid @RequestBody LoginDto loginDto) {
-        userService.loginConfirm(loginDto);
-
-        return "main";
+        if (userService.login(loginDto)) {
+            return "main";
+        } else {
+            return "login";
+        }
     }
 
     @GetMapping("/hello")
