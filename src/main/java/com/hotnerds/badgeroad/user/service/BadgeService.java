@@ -1,5 +1,6 @@
 package com.hotnerds.badgeroad.user.service;
 
+import com.hotnerds.badgeroad.store.repository.StoreRepository;
 import com.hotnerds.badgeroad.user.entity.Badge;
 import com.hotnerds.badgeroad.user.repository.BadgeRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,10 @@ public class BadgeService {
 
     public List<Badge> findAllBadges() {
         return badgeRepository.findAll();
+    }
+
+    public void putAllBadgesFromStore() {
+//        StoreRepository
     }
 
 }
